@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Documentos - MultiPrint</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --secondary: #718096;
+            --success: #38a169;
+            --background: #f7fafc;
+            --surface: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-brand .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .header-brand h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-light);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-secondary);
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Upload Form Card */
+        .upload-card {
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .upload-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .upload-header h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .upload-header i {
+            color: var(--primary);
+        }
+
+        .upload-content {
+            padding: 2rem;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: #e6f3ff;
+        }
+
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .upload-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--surface);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
+        }
+
+        .file-input:hover {
+            border-color: var(--primary);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            justify-content: center;
+            line-height: 1.25;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+            flex: 1;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-light);
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* File Guidelines */
+        .guidelines {
+            background: #e6f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .guidelines-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .guidelines-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .guideline-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .guideline-item i {
+            color: var(--success);
+            font-size: 0.75rem;
+        }
+
+        /* File Preview */
+        .file-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-preview.show {
+            display: block;
+        }
+
+        .file-preview-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-preview-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main {
+                padding: 1rem;
+            }
+
+            .header-content {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .upload-content {
+                padding: 1.5rem;
+            }
+
+            .upload-zone {
+                padding: 2rem 1rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .guidelines-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .slide-up {
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .slide-up:nth-child(1) { animation-delay: 0.1s; }
+        .slide-up:nth-child(2) { animation-delay: 0.2s; }
+        .slide-up:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Focus styles */
+        .file-input:focus,
+        .btn:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header fade-in">
+        <div class="header-content">
+            <div class="header-brand">
+                <div class="logo">
+                    <i class="fas fa-print"></i>
+                </div>
+                <h1>MultiPrint</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="{% url 'document_list' %}">← Voltar aos Documentos</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb slide-up">
+            <nav>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="{% url 'document_list' %}">Documentos</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>Upload</span>
+            </nav>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header slide-up">
+            <h1 class="page-title">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload de Documentos
+            </h1>
+            <p class="page-subtitle">
+                Faça upload de múltiplos documentos de uma só vez. 
+                Os arquivos serão organizados automaticamente em sua biblioteca pessoal.
+            </p>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="upload-card slide-up">
+            <div class="upload-header">
+                <h3>
+                    <i class="fas fa-file-upload"></i>
+                    Selecionar Arquivos
+                </h3>
+            </div>
+            <div class="upload-content">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    {% csrf_token %}
+                    
+                    <div class="upload-zone">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h4 class="upload-title">Selecione seus arquivos</h4>
+                        <p class="upload-subtitle">
+                            Escolha um ou múltiplos documentos do seu computador.<br>
+                            Formatos suportados: PDF, Word, Excel, Imagens e Texto.
+                        </p>
+                        
+                        <input type="file" name="files" multiple required class="file-input" 
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.gif"
+                               onchange="showFilePreview(this)">
+                        
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-preview-title">Arquivos Selecionados:</div>
+                            <div class="file-preview-count" id="fileCount"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="uploadBtn">
+                            <i class="fas fa-upload"></i>
+                            Fazer Upload dos Arquivos
+                        </button>
+                        <a href="{% url 'document_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i>
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Guidelines -->
+        <div class="guidelines slide-up">
+            <div class="guidelines-header">
+                <i class="fas fa-info-circle"></i>
+                Tipos de arquivo suportados
+            </div>
+            <div class="guidelines-list">
+                <div class="guideline-item">
+                    <i class="fas fa-check"></i>
+                    Documentos PDF (.pdf)
+                </div>
+                <div class="guideline-item">
+                    <i class="fas fa-check"></i>
+                    Word (.doc, .docx)
+                </div>
+                <div class="guideline-item">
+                    <i class="fas fa-check"></i>
+                    Excel (.xls, .xlsx)
+                </div>
+                <div class="guideline-item">
+                    <i class="fas fa-check"></i>
+                    Imagens (.jpg, .png, .gif)
+                </div>
+                <div class="guideline-item">
+                    <i class="fas fa-check"></i>
+                    Texto (.txt)
+                </div>
+                <div class="guideline-item">
+                    <i class="fas fa-check"></i>
+                    Tamanho máximo: 10MB por arquivo
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Minimal JavaScript - only essential functionality
+        function showFilePreview(input) {
+            const preview = document.getElementById('filePreview');
+            const count = document.getElementById('fileCount');
+            const files = input.files;
+            
+            if (files.length > 0) {
+                preview.classList.add('show');
+                count.textContent = `${files.length} arquivo(s) selecionado(s)`;
+            } else {
+                preview.classList.remove('show');
+            }
+        }
+
+        // Show loading state on form submit
+        document.getElementById('uploadForm').addEventListener('submit', function() {
+            const btn = document.getElementById('uploadBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>

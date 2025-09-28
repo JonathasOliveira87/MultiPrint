@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Documentos - MultiPrint</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --secondary: #718096;
+            --success: #38a169;
+            --danger: #e53e3e;
+            --warning: #d69e2e;
+            --background: #f7fafc;
+            --surface: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-brand .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .header-brand h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-light);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-secondary);
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            gap: 2rem;
+        }
+
+        .page-info h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-info h1 i {
+            color: var(--primary);
+        }
+
+        .page-info p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stats-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .stats-details h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stats-details p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Documents Grid */
+        .documents-section {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .documents-grid {
+            padding: 2rem;
+        }
+
+        .documents-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .document-item {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .document-item:hover {
+            background: var(--surface);
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .document-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .document-info {
+            min-width: 0;
+        }
+
+        .document-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+            word-break: break-all;
+        }
+
+        .document-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .document-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            justify-content: center;
+            line-height: 1.25;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+            border: 1px solid var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
+            border-color: #4a5568;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: 1px solid var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+            border-color: #c53030;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: var(--surface);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            width: 100px;
+            height: 100px;
+            background: #f7fafc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--text-secondary);
+            font-size: 2.5rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-description {
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--danger);
+            font-size: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main {
+                padding: 1rem;
+            }
+
+            .header-content {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .page-actions {
+                justify-content: stretch;
+            }
+
+            .page-actions .btn {
+                flex: 1;
+            }
+
+            .stats-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .document-item {
+                grid-template-columns: auto 1fr;
+                gap: 1rem;
+            }
+
+            .document-actions {
+                grid-column: 1 / -1;
+                justify-content: center;
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--border);
+            }
+
+            .documents-grid {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .slide-up {
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Stagger animation delays */
+        .slide-up:nth-child(1) { animation-delay: 0.1s; }
+        .slide-up:nth-child(2) { animation-delay: 0.2s; }
+        .slide-up:nth-child(3) { animation-delay: 0.3s; }
+
+        .document-item {
+            animation: slideUp 0.4s ease-out forwards;
+            opacity: 0;
+        }
+
+        .document-item:nth-child(1) { animation-delay: 0.1s; }
+        .document-item:nth-child(2) { animation-delay: 0.2s; }
+        .document-item:nth-child(3) { animation-delay: 0.3s; }
+        .document-item:nth-child(4) { animation-delay: 0.4s; }
+        .document-item:nth-child(n+5) { animation-delay: 0.5s; }
+
+        /* Focus styles */
+        .btn:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header fade-in">
+        <div class="header-content">
+            <div class="header-brand">
+                <div class="logo">
+                    <i class="fas fa-print"></i>
+                </div>
+                <h1>MultiPrint</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="{% url 'dashboard' %}">← Voltar ao Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb slide-up">
+            <nav>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>Meus Documentos</span>
+            </nav>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header slide-up">
+            <div class="page-info">
+                <h1>
+                    <i class="fas fa-file-alt"></i>
+                    Meus Documentos
+                </h1>
+                <p>Gerencie todos os seus documentos de forma organizada e eficiente</p>
+            </div>
+            <div class="page-actions">
+                <a href="{% url 'upload_document' %}" class="btn btn-primary">
+                    <i class="fas fa-upload"></i>
+                    Novo Documento
+                </a>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-bar slide-up">
+            <div class="stats-content">
+                <div class="stats-info">
+                    <div class="stats-icon">
+                        <i class="fas fa-file-text"></i>
+                    </div>
+                    <div class="stats-details">
+                        <h3>{{ documents.count }}</h3>
+                        <p>Documento{{ documents.count|pluralize:"s" }} Tota{% if documents.count == 1 %}l{% else %}is{% endif %}</p>
+                    </div>
+                </div>
+                <div class="stats-meta">
+                    <span style="color: var(--text-secondary); font-size: 0.875rem;">
+                        <i class="fas fa-clock"></i>
+                        Última atualização: hoje
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Alert Messages -->
+        {% if messages %}
+            <ul class="alert slide-up" style="list-style: none; padding: 0; margin-bottom: 1rem;">
+                {% for message in messages %}
+                    <li style="display: flex; align-items: center; gap: 0.5rem; 
+                            padding: 0.5rem 1rem; border: 1px solid {% if message.tags == 'error' %}red{% else %}green{% endif %}; 
+                            border-radius: 6px; background-color: {% if message.tags == 'error' %}#ffe5e5{% else %}#e5ffe5{% endif %}; 
+                            color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>{{ message }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
+
+        <!-- Documents List -->
+        <div class="documents-section slide-up">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i>
+                    Lista de Documentos
+                </h2>
+            </div>
+            <div class="documents-grid">
+                {% if documents %}
+                    <div class="documents-list">
+                        {% for doc in documents %}
+                            <div class="document-item">
+                                <div class="document-icon">
+                                    {% if doc.file.name|slice:"-4:" == ".pdf" %}
+                                        <i class="fas fa-file-pdf"></i>
+                                    {% elif doc.file.name|slice:"-4:" in ",.doc,.docx" %}
+                                        <i class="fas fa-file-word"></i>
+                                    {% elif doc.file.name|slice:"-4:" in ",.xls,.xlsx" %}
+                                        <i class="fas fa-file-excel"></i>
+                                    {% elif doc.file.name|slice:"-4:" in ",.jpg,.jpeg,.png,.gif" %}
+                                        <i class="fas fa-file-image"></i>
+                                    {% else %}
+                                        <i class="fas fa-file-alt"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-name">{{ doc.file.name }}</div>
+                                    <div class="document-meta">
+                                        <span>
+                                            <i class="fas fa-calendar"></i>
+                                            {{ doc.uploaded_at|date:"d/m/Y H:i" }}
+                                        </span>
+                                        <span>
+                                            <i class="fas fa-hdd"></i>
+                                            {{ doc.file.size|filesizeformat }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <a href="{{ doc.file.url }}" target="_blank" class="btn btn-sm btn-secondary" title="Visualizar documento">
+                                        <i class="fas fa-download"></i>
+                                        Download
+                                    </a>
+                                    <button onclick="confirmDelete('{{ doc.file.name }}', '{{ doc.pk }}')" 
+                                            class="btn btn-sm btn-danger" title="Excluir documento">
+                                        <i class="fas fa-trash"></i>
+                                        Excluir
+                                    </button>
+                                    <!-- Formulário hidden para exclusão -->
+                                    <form id="deleteForm{{ doc.pk }}" method="POST" action="{% url 'document_delete' doc.pk %}" style="display: none;">
+                                        {% csrf_token %}
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <h3 class="empty-title">Nenhum documento encontrado</h3>
+                        <p class="empty-description">
+                            Você ainda não enviou nenhum documento para o sistema.
+                            Comece fazendo o upload do seu primeiro arquivo para organizar e imprimir seus documentos.
+                        </p>
+                        <a href="{% url 'upload_document' %}" class="btn btn-primary">
+                            <i class="fas fa-upload"></i>
+                            Fazer Upload do Primeiro Documento
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 class="modal-title">Confirmar Exclusão</h3>
+                <p class="modal-description">
+                    Tem certeza que deseja excluir o documento <strong id="documentName"></strong>? 
+                    Esta ação não pode ser desfeita.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button onclick="closeDeleteModal()" class="btn btn-outline">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button onclick="executeDelete()" id="confirmDeleteBtn" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Confirmar Exclusão
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteModal = null;
+        let currentDocumentId = null;
+
+        function confirmDelete(fileName, documentId) {
+            const modal = document.getElementById('deleteModal');
+            const documentName = document.getElementById('documentName');
+            
+            documentName.textContent = fileName;
+            currentDocumentId = documentId;
+            
+            modal.classList.add('show');
+            deleteModal = modal;
+        }
+
+        function executeDelete() {
+            if (currentDocumentId) {
+                const form = document.getElementById('deleteForm' + currentDocumentId);
+                if (form) {
+                    form.submit();
+                }
+            }
+        }
+
+        function closeDeleteModal() {
+            if (deleteModal) {
+                deleteModal.classList.remove('show');
+                deleteModal = null;
+                currentDocumentId = null;
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeDeleteModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && deleteModal) {
+                closeDeleteModal();
+            }
+        });
+
+        // Initialize animations and interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Show success message if document was uploaded
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('uploaded') === 'success') {
+                showNotification('Documento enviado com sucesso!', 'success');
+            }
+            if (urlParams.get('deleted') === 'success') {
+                showNotification('Documento excluído com sucesso!', 'success');
+            }
+        });
+
+        function showNotification(message, type) {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#38a169' : '#e53e3e'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 1001;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 300);
+        }
+
+        // Add CSS for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
