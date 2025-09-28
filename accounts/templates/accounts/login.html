@@ -310,7 +310,7 @@
                 {% endfor %}
 
                 <!-- Login Form -->
-                <form method="POST" id="loginForm">
+                <form method="POST" action="{% url 'login' %}" id="loginForm">
                     {% csrf_token %}
                     
                     <!-- Username Field -->
@@ -353,33 +353,7 @@
         </div>
     </div>
 
-    <script>
-        // Form submission with loading state
-        document.getElementById('loginForm').addEventListener('submit', function() {
-            const submitBtn = document.getElementById('submitBtn');
-            const container = document.querySelector('.login-card');
-            
-            submitBtn.innerHTML = '<span class="loading"></span>Entrando...';
-            submitBtn.disabled = true;
-            
-            container.classList.remove('shake');
-        });
 
-        // Add shake animation on error
-        window.addEventListener('load', function() {
-            const alerts = document.querySelectorAll('.alert-danger');
-            const container = document.querySelector('.login-card');
-            
-            if (alerts.length > 0) {
-                container.classList.add('shake');
-                document.getElementById('username').focus();
-            }
-        });
 
-        // Auto-focus on username field
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('username').focus();
-        });
-    </script>
 </body>
 </html>

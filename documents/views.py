@@ -6,6 +6,7 @@ from .models import Document, PrintKit
 from django.contrib import messages
 
 
+
 @login_required
 def document_list(request):
     documents = Document.objects.filter(user=request.user).order_by("-uploaded_at")
@@ -29,7 +30,6 @@ def document_delete(request, pk):
     # Verifica se o documento está em algum kit
     kits_with_doc = PrintKit.objects.filter(user=request.user, documents=doc)
     if kits_with_doc.exists():
-        from django.contrib import messages
         kit_names = ", ".join(k.name for k in kits_with_doc)  # pega os nomes dos kits
         messages.error(request, f"Não é possível deletar este documento, pois ele está nos seguintes kits: {kit_names}.")
         return redirect("document_list")
@@ -44,7 +44,6 @@ def document_delete(request, pk):
     doc.delete()
     messages.success(request, "Documento deletado com sucesso.")
     return redirect("document_list")
-
 
 
 @login_required
@@ -80,13 +79,11 @@ def create_kit(request, kit_id=None):
 @login_required
 def kit_delete(request, kit_id):
     kit = get_object_or_404(PrintKit, id=kit_id, user=request.user)
-    
-
-
     # Se não tiver documentos, pode deletar
     kit.delete()
     messages.success(request, "Kit deletado com sucesso.")
     return redirect("create_kit")
+
 
 @login_required
 def edit_kit(request, kit_id):
